@@ -1,0 +1,127 @@
+<ngx-datatable
+  #table
+  class="bootstrap"
+  [columnMode]="'flex'"
+  [headerHeight]="50"
+  [footerHeight]="50"
+  [rowHeight]="'auto'"
+  [limit]="10"
+  [rows]="rows"
+>
+  <ngx-datatable-column
+    [flexGrow]="0.8"
+    [width]="50"
+    [resizeable]="false"
+    [sortable]="false"
+    [draggable]="false"
+    [canAutoResize]="false"
+  >
+    <ng-template
+      let-row="row"
+      let-expanded="expanded"
+      ngx-datatable-cell-template
+    >
+      <a
+        class="table-icons"
+        [class.datatable-icon-right]="!expanded"
+        [class.datatable-icon-down]="expanded"
+        title="Expand/Collapse Row"
+        (click)="toggleExpandRow(row, expanded)"
+      >
+      </a>
+    </ng-template>
+  </ngx-datatable-column>
+
+  <!-- Other Columns -->
+  <ngx-datatable-column [flexGrow]="1.5" name="Trip" prop="descrizione">
+    <ng-template
+      ngx-datatable-cell-template
+      let-rowIndex="rowIndex"
+      let-value="value"
+      let-row="row"
+    >
+      <input
+        class="form-control"
+        value="descrizione"
+        [(ngModel)]="row.descrizione"
+        [disabled]="!isEditable[rowIndex]"
+      />
+    </ng-template>
+  </ngx-datatable-column>
+
+  <ngx-datatable-column [flexGrow]="1.5" name="Price (NOK)" prop="indice">
+    <ng-template
+      ngx-datatable-cell-template
+      let-rowIndex="rowIndex"
+      let-value="value"
+      let-row="row"
+    >
+      <input
+        class="form-control"
+        value="indice"
+        [(ngModel)]="row.indice"
+        [disabled]="!isEditable[rowIndex]"
+      />
+    </ng-template>
+  </ngx-datatable-column>
+
+  <ngx-datatable-column
+    [flexGrow]="1.5"
+    name="City"
+    prop="selectedItems"
+    *ngIf="!isEditable[rowIndex]"
+  >
+    <ng-template
+      ngx-datatable-cell-template
+      let-rowIndex="rowIndex"
+      let-value="value"
+      let-row="row"
+    >
+      <ng-multiselect-dropdown
+        [placeholder]="'custom placeholder'"
+        [data]="dropdownList"
+        [(ngModel)]="row.selectedItems"
+        [disabled]="!isEditable[rowIndex]"
+        [settings]="dropdownSettings"
+        (onSelect)="onItemSelect($event)"
+        (onSelectAll)="onSelectAll($event)"
+      >
+      </ng-multiselect-dropdown>
+    </ng-template>
+  </ngx-datatable-column>
+  <ngx-datatable-column [flexGrow]="0.5">
+    <ng-template
+      let-value="value"
+      let-row="row"
+      let-rowIndex="rowIndex"
+      ngx-datatable-cell-template
+    >
+      <button
+        title="click to update data"
+        *ngIf="!this.isEditable[rowIndex]"
+        class="btn btn-sm btn-primary mr-2"
+        (click)="this.isEditable[rowIndex] = !this.isEditable[rowIndex]"
+      >
+        <i class="fa fa-pencil"></i>
+      </button>
+
+      <button
+        title="click to save data"
+        *ngIf="this.isEditable[rowIndex]"
+        class="btn btn-sm btn-success mr-2"
+        (click)="save(row, rowIndex)"
+      >
+        <i class="fa fa-floppy-o"> </i>
+      </button>
+
+      <button
+        class="btn btn-sm btn-danger mr-2"
+        *ngIf="this.isEditable[rowIndex]"
+        title="Delete"
+        (click)="delete(row, rowIndex)"
+      >
+        <i class="fa fa-trash-o"></i>
+      </button>
+    </ng-template>
+  </ngx-datatable-column>
+</ngx-datatable>
